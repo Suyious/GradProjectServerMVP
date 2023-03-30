@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
@@ -10,12 +11,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7d9mf4!ej4=z^@8xo%g8a+1_-xj0@odj9=u-ps^8@oe+6mr*3s'
+SECRET_KEY = os.environ.get('SECRET_KEY', default='django-insecure-7d9mf4!ej4=z^@8xo%g8a+1_-xj0@odj9=u-ps^8@oe+6mr*3s')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'PROD' not in os.environ
 
 ALLOWED_HOSTS = []
+EXTERNAL_HOSTNAME = os.environ.get('DEPLOY_STATIC_URL')
+if EXTERNAL_HOSTNAME:
+  ALLOWED_HOST.append(EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -28,7 +32,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-    'src.user'
+    'src.user',
+    'src.test',
+    'src.result'
 ]
 
 MIDDLEWARE = [
@@ -117,8 +123,10 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = "user.User"
 
+# CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8000",
+    "http://localhost:4173",
     "http://localhost:5173",
 ]
 

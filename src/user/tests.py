@@ -1,6 +1,7 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
+from ..utils.tests import AuthenticatedTests
 import json
 
 class SignUpTests(APITestCase):
@@ -64,24 +65,8 @@ class LogInTests(APITestCase):
     response = self.client.post(self.url, self.data_correct, format='json')
     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-class GetUserTests(APITestCase):
+class GetUserTests(AuthenticatedTests):
   url = reverse("me")
-  login_url = reverse('login')
-  signup_url = reverse('signup')
-
-  data_login = {
-      "email": "test@mail.com",
-      "password": "testpassword"
-  }
-
-  data_signup = {
-      "first_name": "Tes",
-      "last_name": "T",
-      "username": "test",
-      "email": "test@mail.com",
-      "password": "testpassword"
-  }
-
   data_response = {
       "first_name": "Tes",
       "last_name": "T",
@@ -89,20 +74,13 @@ class GetUserTests(APITestCase):
       "email": "test@mail.com",
   }
 
-  def setUp(self):
-    self.client.post(self.signup_url, self.data_signup, format='json')
-
-  def log_user_in(self, data):
-    response = self.client.post(self.login_url, self.data_login, format='json')
-    self.token = json.loads(response.content).get('token', '')
-
   def test_get_user_fails_when_logged_out(self):
     response = self.client.get(self.url)
     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
     self.assertJSONNotEqual(response.content, self.data_response)
 
   def test_get_user_succeeds_when_logged_in(self):
-    self.log_user_in(self.data_login)
+    self.log_user_in()
     access = self.token.get('access', '')
     response = self.client.get(self.url, **{'HTTP_AUTHORIZATION': f'Bearer {access}'})
     self.assertEqual(response.status_code, status.HTTP_200_OK)
