@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
@@ -19,7 +20,7 @@ DEBUG = 'PROD' not in os.environ
 ALLOWED_HOSTS = []
 EXTERNAL_HOSTNAME = os.environ.get('DEPLOY_STATIC_URL')
 if EXTERNAL_HOSTNAME:
-  ALLOWED_HOST.append(EXTERNAL_HOSTNAME)
+  ALLOWED_HOSTS.append(EXTERNAL_HOSTNAME)
 
 # Application definition
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -72,10 +74,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+      # Feel free to alter this value to suit your needs.
+      default='sqlite:///db.sqlite3',
+      conn_max_age=600
+    )
 }
 
 # Password validation
@@ -109,6 +112,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+if not DEBUG:
+    # Tell Django to copy statics to the `staticfiles` directory
+    # in your application directory
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    # Turn on WhiteNoise storage backend that takes care of compressing static files and creating unique names for each version so they can safely be cached forever.
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -129,6 +138,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4173",
     "http://localhost:5173",
 ]
+ENV_CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS')
+if(ENV_CORS_ALLOWED_ORIGINS):
+  CORS_ALLOWED_ORIGINS.extend(ENV_CORS_ALLOWED_ORIGINS.split());
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
