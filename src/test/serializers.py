@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from .models import Test, Question
+from src.user.serializers import UserSerializer
 
 class QuestionSerializer(ModelSerializer):
   class Meta:
@@ -25,9 +26,10 @@ class QuestionSerializer(ModelSerializer):
 
 class TestSerializer(ModelSerializer):
   questions = QuestionSerializer(many = True, required=False)
+  author = UserSerializer(required=False)
   class Meta:
     model = Test
-    fields = [ 'id', 'name', 'description', 'starts_at', 'duration', 'questions' ]
+    fields = [ 'id', 'name', 'description', 'created_at' ,'starts_at', 'duration', 'questions', 'author' ]
 
   def validate(self, attrs):
     name = attrs.get('name','')

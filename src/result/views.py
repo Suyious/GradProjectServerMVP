@@ -68,5 +68,5 @@ class ResultResponseAPI(APIView):
             serializer = self.serializer_class(data = data)
         serializer.is_valid(raise_exception=True)
         serializer.save(registration = registration)
-        response = { "success": True, data: serializer.data}
+        response = { "success": True, "data": serializer.data}
         return Response(response, status=status.HTTP_200_OK)

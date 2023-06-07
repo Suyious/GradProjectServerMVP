@@ -111,7 +111,12 @@ class ResultResponseListTest(ResultBaseTest):
         """
         @description tests the POST endpoint for
         - returning 404 for invalid registration id
+        - [TODO] returning 404 for invalid question id
         """
+        response = self.create_new_response(1, constants.data_new_response)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.create_new_test(constants.data_new_test)
+        self.create_new_registration(1)
         response = self.create_new_response(1, constants.data_new_response)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
@@ -119,13 +124,19 @@ class ResultResponseListTest(ResultBaseTest):
         """
         @description tests the POST endpoint for
         - creating new response for the registration
+        - updating score for the registration
         by answering question
         - returning created response
         """
         self.create_new_test(constants.data_new_test_with_questions)
         self.create_new_registration(1)
         response = self.create_new_response(1, constants.data_new_response)
-        print(response.content)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        response = self.client.get(self.url_result_response_list(1))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.json()[0]["status"], "Correct")
+        response = self.client.get(self.url_result_detail(1))
+        self.assertEqual(response.json()["score"], 1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_multiple_new_responses(self):
@@ -134,6 +145,10 @@ class ResultResponseListTest(ResultBaseTest):
         - creating multiple new responses for the registration
         - returning created responses
         """
+        self.create_new_test(constants.data_new_test_with_questions)
+        self.create_new_registration(1)
+        response = self.create_new_response(1, constants.data_new_multiple_responses)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class ResultResponseDetailTest(ResultBaseTest):

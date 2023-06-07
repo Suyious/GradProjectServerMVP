@@ -37,13 +37,18 @@ def update_response_status_and_registration_score(sender, instance, **kwargs):
 
     if answer == question.answer:
         instance.status = 'Correct'
+        post_save.disconnect(update_response_status_and_registration_score, sender=Response)
+        instance.save()
+        post_save.connect(update_response_status_and_registration_score, sender=Response)
         # update registration score
         registration = instance.registration
         registration.score = registration.responses.filter(status='Correct').count()
         registration.save()
+        return
     elif answer == 0:
         instance.status = 'Unanswered'
     else:
         instance.status = 'Wrong'
-
+    post_save.disconnect(update_response_status_and_registration_score, sender=Response)
     instance.save()
+    post_save.connect(update_response_status_and_registration_score, sender=Response)

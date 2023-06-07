@@ -18,8 +18,22 @@ data_new_test_with_questions = {
     **data_new_test,
     "questions": 
       data_question_multiple
-    }
+}
 data_new_response = {
     "question_id": 1,
-    "answer": 2
+    "answer": 1,
 }
+data_new_multiple_responses = [
+    {
+      "question_id": 1,
+      "answer": 1,
+      },
+    {
+      "question_id": 2,
+      "answer": 1,
+      },
+    {
+      "question_id": 3,
+      "answer": 1,
+      },
+    ]
