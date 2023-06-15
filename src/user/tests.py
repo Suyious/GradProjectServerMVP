@@ -68,6 +68,7 @@ class LogInTests(APITestCase):
 class GetUserTests(AuthenticatedTests):
   url = reverse("me")
   data_response = {
+      "id": 1,
       "first_name": "Tes",
       "last_name": "T",
       "username": "test",

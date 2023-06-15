@@ -6,12 +6,20 @@ data_new_test = {
     "starts_at": TWO_DAYS_LATER,
     "duration": timedelta(hours = 2)
 }
+data_user = {
+    "first_name": "Tes",
+    "last_name": "T",
+    "username": "test",
+    "email": "test@mail.com",
+}
 data_response = {
     **data_new_test,
     "id": 1,
     "starts_at": data_new_test["starts_at"].strftime(STRTIMEFORMAT),
+    "created_at": TODAY.strftime(STRTIMEFORMAT),
     "duration": '02:00:00',
     "questions": [],
+    "author": data_user,
 } 
 data_test_offline = {
     **data_new_test,
@@ -21,8 +29,10 @@ data_response_offline = {
     **data_test_offline,
     "id": 2,
     "starts_at": data_test_offline["starts_at"].strftime(STRTIMEFORMAT),
+    "created_at": TODAY.strftime(STRTIMEFORMAT),
     "duration": '02:00:00',
     "questions": [],
+    "author": data_user,
 }
 data_test_online = {
     **data_new_test,
@@ -32,8 +42,10 @@ data_response_online = {
     **data_test_online,
     "id": 2,
     "starts_at": data_test_online["starts_at"].strftime(STRTIMEFORMAT),
+    "created_at": TODAY.strftime(STRTIMEFORMAT),
     "duration": '02:00:00',
     "questions": [],
+    "author": data_user,
 }
 data_question_request = {
     "serial": 1,
@@ -61,19 +73,23 @@ data_new_test_with_question_response = {
     **data_new_test_with_question,
     "id": 1,
     "starts_at": data_new_test["starts_at"].strftime(STRTIMEFORMAT),
+    "created_at": TODAY.strftime(STRTIMEFORMAT),
     "duration": '02:00:00',
     "questions": [
       data_question_response
-      ]
+      ],
+    "author": data_user,
     }
 data_response_test_with_question = {
   **data_new_test,
   "id": 1,
   "starts_at": data_new_test["starts_at"].strftime(STRTIMEFORMAT),
+  "created_at": TODAY.strftime(STRTIMEFORMAT),
   "duration": '02:00:00',
   "questions": [
     data_question_response,
-  ]
+  ],
+  "author": data_user,
 }
 data_response_test_question = {
     **data_question_request,
@@ -108,5 +124,6 @@ data_response_test_with_questions_multiple = {
   "id": 1,
   "starts_at": data_new_test["starts_at"].strftime(STRTIMEFORMAT),
   "duration": '02:00:00',
-  "questions": data_questions_multiple_response
+  "questions": data_questions_multiple_response,
+  "author": data_user,
 }

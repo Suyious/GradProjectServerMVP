@@ -74,7 +74,7 @@ class ResultDetailTest(ResultBaseTest):
         - returning result detail for valid registration id
         """
         self.create_new_test(constants.data_new_test)
-        self.create_new_registration(1)
+        response = self.create_new_registration(1)
         response = self.client.get(self.url_result_detail(1))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 

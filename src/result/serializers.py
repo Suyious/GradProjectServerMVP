@@ -22,6 +22,7 @@ class ResponseSerializer(ModelSerializer):
 class ResultSerializer(ModelSerializer):
     responses = ResponseSerializer(many=True, required=False)
     user = UserSerializer(required=False)
+    test_id = IntegerField(read_only=True)
     class Meta:
         model = Registration
-        fields = ['id', 'user', 'score', 'created_at', 'responses']
+        fields = ['id', 'user', 'score', 'test_id', 'created_at', 'responses']
