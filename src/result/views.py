@@ -32,7 +32,7 @@ class ResultAPI(APIView):
         elif filter_user:
           query_set = query_set.filter(user = filter_user);
         elif filter_test:
-          query_set = quert_set.filter(test = filter_test);
+          query_set = query_set.filter(test = filter_test);
         serializer = self.serializer_class(query_set, many = True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     

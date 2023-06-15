@@ -25,7 +25,7 @@ class QuestionSerializer(ModelSerializer):
     return Question.objects.create(**validated_data)
 
 class TestSerializer(ModelSerializer):
-  questions = QuestionSerializer(many = True, required=False)
+  questions = QuestionSerializer(many = True, required=False, write_only=True)
   author = UserSerializer(required=False)
   class Meta:
     model = Test
