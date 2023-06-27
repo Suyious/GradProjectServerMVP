@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, get_list_or_404
+from django.db import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -153,8 +154,15 @@ class TestResultAPI(APIView):
     @method POST
     """
     data = get_object_or_404(Test, id = id)
+    if not data.isTestAvailable:
+      response = { "success": False, "data": "unavailable" }
+      return Response(response, status = status.HTTP_400_BAD_REQUEST)
     serializer = self.serializer_class(data = request.data)
     serializer.is_valid(raise_exception=True)
-    serializer.save(test = data, user = request.user)
+    try:
+      serializer.save(test=data, user=request.user)
+    except IntegrityError:
+      response = {"success": False, "data": "already registered"}
+      return Response(response, status=status.HTTP_400_BAD_REQUEST)
     response = { "success": True, "data": serializer.data }
     return Response(response, status = status.HTTP_200_OK)

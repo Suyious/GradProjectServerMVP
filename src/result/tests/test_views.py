@@ -37,7 +37,7 @@ class ResultListTest(ResultBaseTest):
     @extends ResultBaseTest
     @description
     - tests the view ResultAPI
-    - corresponding url: /registration/
+    - corresponding url: /registrations/
     - methods: 
         - GET (to get all results)
     """
@@ -56,7 +56,7 @@ class ResultDetailTest(ResultBaseTest):
     @extends ResultBaseTest
     @description
     - tests the view ResultDetailAPI
-    - corresponding url /registration/<int:rid>/
+    - corresponding url /registrations/<int:rid>/
     - methods:
         - GET (to get details of a registration)
     """

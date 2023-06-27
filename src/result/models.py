@@ -14,6 +14,9 @@ class Registration(models.Model):
     class Meta:
         ordering = [ "-score", "created_at" ]
 
+    class Meta:
+        unique_together = ('user', 'test')
+
 
 class Response(models.Model):
     registration = models.ForeignKey(Registration, on_delete=models.CASCADE, verbose_name='Registration', related_name='responses')

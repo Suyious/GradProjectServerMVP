@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, BooleanField
 from .models import Test, Question
 from src.user.serializers import UserSerializer
 
@@ -27,9 +27,14 @@ class QuestionSerializer(ModelSerializer):
 class TestSerializer(ModelSerializer):
   questions = QuestionSerializer(many = True, required=False, write_only=True)
   author = UserSerializer(required=False)
+  isTestOnline = BooleanField(read_only=True)
+  isTestAvailable = BooleanField(read_only=True)
+  isTestOffline = BooleanField(read_only=True)
+
   class Meta:
     model = Test
-    fields = [ 'id', 'name', 'description', 'created_at' ,'starts_at', 'duration', 'questions', 'author' ]
+    fields = [ 'id', 'name', 'description', 'created_at' ,'starts_at', 'duration', 'questions', 'author',
+                'isTestOnline', 'isTestAvailable', 'isTestOffline' ]
 
   def validate(self, attrs):
     name = attrs.get('name','')
