@@ -13,6 +13,10 @@ class Test(models.Model):
   # candidates = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Registration')
 
   @property
+  def endsAt(self):
+    return self.starts_at + self.duration
+
+  @property
   def isTestOnline(self):
     return self.starts_at < timezone.now() and self.starts_at + self.duration > timezone.now()
 
