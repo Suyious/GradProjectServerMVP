@@ -100,12 +100,19 @@ class TestQuestionAPI(APIView):
     """
     data = request.data
     test = get_object_or_404(Test, id = id)
+    if not request.user == test.author:
+      response = {"success": False, "data": "you are not authenticated"}
+      return Response(response, status=status.HTTP_400_BAD_REQUEST)
     if isinstance(data, list):
       serializer = self.serializer_class(data = data, many=True)
     else:
       serializer = self.serializer_class(data = data)
     serializer.is_valid(raise_exception = True)
-    serializer.save(test = test)
+    try:
+      serializer.save(test = test)
+    except IntegrityError:
+      response = {"success": False, "data": "duplicate question"}
+      return Response(response, status=status.HTTP_400_BAD_REQUEST)
     response = { "success": True, "data": serializer.data }
     return Response(response, status = status.HTTP_200_OK)
 
@@ -121,10 +128,10 @@ class TestQuestionDetailAPI(APIView):
 
   def get(self, request, tid, qid):
     """
-    @description returns question with id=`qid` for test with id=`tid`
+    @description returns question with serial=`qid` for test with id=`tid`
     @method GET
     """
-    data = get_object_or_404(Question.objects.filter(test__id = tid), id = qid)
+    data = get_object_or_404(Question.objects.filter(test__id = tid), serial = qid)
     serializer = self.serializer_class(data)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
@@ -136,6 +143,8 @@ class TestResultAPI(APIView):
   @url /tests/<int:tid>/registrations/
   """
   serializer_class = ResultSerializer
+  authentication_classes = (JWTAuthentication, )
+  permission_classes = (IsAuthenticatedOrReadOnly,)
 
   def get(self, request, id):
     """
