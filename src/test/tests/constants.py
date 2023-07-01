@@ -1,5 +1,4 @@
 from src.utils.constants import *
-
 data_new_test = {
     "name": "Sample Mock Test",
     "description": "Description for Sample Mock Test",
