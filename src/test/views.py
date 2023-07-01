@@ -32,6 +32,8 @@ class TestsAPI(APIView):
       query_set = [ x for x in query_set if x.isTestOnline ]
     if(filter_param and filter_param == "available"):
       query_set = [ x for x in query_set if x.isTestAvailable ]
+    if(filter_param and filter_param == "offline"):
+      query_set = [ x for x in query_set if x.isTestOffline ]
     serializer = self.serializer_class(query_set, many = True)
     return Response(serializer.data, status = status.HTTP_200_OK)
 
@@ -151,7 +153,8 @@ class TestResultAPI(APIView):
     @description returns all registrations for a test with score results
     @method GET
     """
-    data = get_list_or_404(Registration, test__id = id)
+    # data = get_list_or_404(Registration, test__id = id)
+    data = Registration.objects.filter(test__id = id)
     serializer = self.serializer_class(data, many=True)
     return Response(serializer.data, status = status.HTTP_200_OK)
   
