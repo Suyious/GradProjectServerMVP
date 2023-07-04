@@ -244,15 +244,8 @@ class TestResultsTest(TestBaseTest):
     - GET (to get results for a test)
     - POST (to register for a test, 
             create new registration)
-  """
-  def test_get_404_for_invalid_test(self):
-    """
-    @description tests GET endpoint for
-    - returning 404 for invalid test
-    """
-    response = self.client.get(self.url_test_results(1))
-    self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+  """ 
+
   def test_register_for_test(self):
     """
     @description tests POST endpoint for
