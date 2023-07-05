@@ -150,32 +150,3 @@ class ResultResponseListTest(ResultBaseTest):
         response = self.create_new_response(1, constants.data_new_multiple_responses)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-
-class ResultResponseDetailTest(ResultBaseTest):
-    """
-    @extends ResultBaseTest
-    @description
-    - tests the view ResultResponseDetailAPI
-    - corresponding url /registration/<int:rid>/response/<int:res_id>/
-    - methods:
-        - GET (to get details for a made response)
-    """
-
-    def test_get_404_for_invalid_registration(self):
-        """
-        @description tests the GET endpoint for
-        - returning 404 for invalid registration id
-        """
-
-    def test_get_404_for_unsubmitted_or_invalid_response(self):
-        """
-        @description tests the GET endpoint for
-        - returning 404 for responses that havent been made
-        or for questions tha dont exist
-        """
-
-    def test_get_responses_for_valid(self):
-        """
-        @description tests the GET endpoint for
-        - returning the corresponding response
-        """
